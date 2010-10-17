@@ -3,8 +3,8 @@
  * (Formerly known as BCSS)
  *
  * REFERENCES:
- *	 Official Website: http://opensource.brightcove.com
- *	 Code Repository: http://code.google.com/p/brightcove/
+ *	 Website: http://opensource.brightcove.com
+ *	 Source: http://github.com/brightcoveosi/
  *
  * AUTHORS:
  *	 Brian Franklin, Professional Services Engineer, Brightcove
