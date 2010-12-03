@@ -1,5 +1,5 @@
 /**
- * BC CSS PLAYER WRAPPER 1.0 (14 OCTOBER 2010)
+ * BC CSS PLAYER WRAPPER 1.0 (3 DECEMBER 2010)
  * (Formerly known as BCSS)
  *
  * REFERENCES:
@@ -137,11 +137,11 @@ var BCSS = new function () {
 		window.onTemplateLoaded = function (id) {
 			BCSS.loaded(id);
 			temp(id);
-		}
+		};
 	} else {
 		window.onTemplateLoaded = function (id) {
 			BCSS.loaded(id);
-		}
+		};
 	}
 
 }();
