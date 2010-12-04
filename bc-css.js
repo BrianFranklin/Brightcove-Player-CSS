@@ -7,7 +7,7 @@
  *	 Source: http://github.com/brightcoveos/
  *
  * AUTHORS:
- *	 Brian Franklin, Professional Services Engineer, Brightcove
+ *	 Brian Franklin <bfranklin@brightcove.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
  * software and associated documentation files (the "Software"), to deal in the Software
@@ -27,7 +27,7 @@
  */
 
 var BCSS = new function () {
-	this.bc;
+	this.brightcove;
 	this.experience;
 	this.player;
 	this.queue = null;
@@ -49,24 +49,24 @@ var BCSS = new function () {
 	/**
 	 * Injects a CSS file as an iFrame into the DOM
 	 * @since 1.0
-	 * @param string [s] Path to the CSS file
+	 * @param string [pUrl] Path to the CSS file
 	 */
-	this.inject = function (s) {
-		var n = document.createElement("iframe");
-		n.setAttribute("src", s);
-		n.setAttribute("id", "BCSS");
-		n.style.display = "none";
-		n.style.height = "1px";
-		n.style.width = "1px";
+	this.inject = function (pUrl) {
+		var pElement = document.createElement("iframe");
+		pElement.setAttribute("src", (pUrl));
+		pElement.setAttribute("id", "BCSS");
+		pElement.style.display = "none";
+		pElement.style.height = "1px";
+		pElement.style.width = "1px";
 
-		document.body.appendChild(n);
+		document.body.appendChild(pElement);
 
-		if (n.addEventListener) {
-			n.addEventListener("load", BCSS.loader, false);
-		} else if (n.attachEvent) {
-			n.attachEvent("onload", BCSS.loader);
+		if (pElement.addEventListener) {
+			pElement.addEventListener("load", BCSS.loader, false);
+		} else if (pElement.attachEvent) {
+			pElement.attachEvent("onload", BCSS.loader);
 		} else {
-			n.onload = BCSS.loader;
+			pElement.onload = BCSS.loader;
 		}
 	};
 
@@ -75,83 +75,83 @@ var BCSS = new function () {
 	 * @since 1.0
 	 */
 	this.loader = function () {
-		var n = document.getElementById("BCSS");
-		var d = ((typeof n.contentDocument == undefined) || (n.contentDocument == null)) ? n.contentWindow.document : n.contentDocument;
-		var c = d.body.innerHTML;
+		var pElement = document.getElementById("BCSS");
+		var pDocument = ((typeof pElement.contentDocument == undefined) || (pElement.contentDocument == null)) ? pElement.contentWindow.document : pElement.contentDocument;
+		var pContent = pDocument.body.innerHTML;
 
 		setTimeout("document.body.removeChild(document.getElementById('BCSS'));", 500);
 
-		BCSS.translate(c);
+		BCSS.translate(pContent);
 	};
 
 	/**
 	 * Parses the CSS into a Brightcove-readable string to send to the player
 	 * @since 1.0
-	 * @param string [css] The CSS styles
+	 * @param string [pStyle] The CSS styles
 	 */
-	this.translate = function (css) {
-		css = css.replace(/<.*?>/ig, "");
-		css = css.replace(/\s{1,}?/ig, "");
+	this.translate = function (pStyle) {
+		pStyle = pStyle.replace(/<.*?>/ig, "");
+		pStyle = pStyle.replace(/\s{1,}?/ig, "");
 
-		var p = css.split("}");
-		var s = "";
+		var pLine = pStyle.split("}");
+		var pPlayerStyle = "";
 
-		for (var i in p) {
-			var n = p[i].substr(0, p[i].indexOf("{"));
-			var r = p[i].substr(p[i].indexOf("{") + 1).split(";");
+		for (var i in pLine) {
+			var pSelector = pLine[i].substr(0, pLine[i].indexOf("{"));
+			var pValues = pLine[i].substr(pLine[i].indexOf("{") + 1).split(";");
 
-			for (var j in r) {
-				if (r[j].length < 1) { continue; }
-				var t = r[j].substr(0, r[j].indexOf(":"));
-				var v = r[j].substr(r[j].indexOf(":") + 1);
+			for (var q in pValues) {
+				if (pValues[q].length < 1) { continue; }
+				
+				var pKey = pValues[q].substr(0, pValues[q].indexOf(":"));
+				var pValue = pValues[q].substr(pValues[q].indexOf(":") + 1);
 
-				s += (n.replace(".", "") + "-" + t + ":" + v + ";");
+				pPlayerStyle += (pSelector.replace(".", "") + "-" + pKey + ":" + pValue + ";");
 			}
 		}
 
 		try {
-		    this.player.setStyles(s);
+		    BCSS.player.setStyles(pPlayerStyle);
 		} catch (e) {
-			queue = s;
+			BCSS.queue = pPlayerStyle;
 		}
 	};
 
 	/**
 	 * An event that runs when onTemplateLoaded is fired
 	 * @since 1.0
-	 * @param string [id] The Brightcove experience ID
+	 * @param string [pId] The Brightcove experience ID
 	 */
-	this.loaded = function (id) {
-		BCSS.bc = brightcove.getExperience(id);
-	    BCSS.experience = BCSS.bc.getModule("experience");
-	    BCSS.player = BCSS.bc.getModule(APIModules.VIDEO_PLAYER);
+	this.loaded = function (pId) {
+		BCSS.brightcove = brightcove.getExperience(pId);
+	    BCSS.experience = BCSS.brightcove.getModule("experience");
+	    BCSS.player = BCSS.brightcove.getModule(APIModules.VIDEO_PLAYER);
 
-		if (queue != null) {
-			BCSS.player.setStyles(queue);
+		if (BCSS.queue != null) {
+			BCSS.player.setStyles(BCSS.queue);
 		}
 	};
 
 	if (typeof onTemplateLoaded == "function") {
 		var temp = onTemplateLoaded;
 
-		window.onTemplateLoaded = function (id) {
-			BCSS.loaded(id);
-			temp(id);
+		window.onTemplateLoaded = function (pId) {
+			BCSS.loaded(pId);
+			temp(pId);
 		};
 	} else {
-		window.onTemplateLoaded = function (id) {
-			BCSS.loaded(id);
+		window.onTemplateLoaded = function (pId) {
+			BCSS.loaded(pId);
 		};
 	}
-
 }();
 
 if (typeof window.onload == "function") {
 	var temp = window.onload;
 
-	window.onload = function (id) {
+	window.onload = function (pId) {
 		BCSS.init();
-		temp(id);
+		temp(pId);
 	}
 } else {
 	window.onload = BCSS.init;
