@@ -1,10 +1,10 @@
 /**
- * BC CSS PLAYER WRAPPER 1.0 (3 DECEMBER 2010)
+ * Brightcove Player CSS Wrapper 1.0 (3 DECEMBER 2010)
  * (Formerly known as BCSS)
  *
  * REFERENCES:
  *	 Website: http://opensource.brightcove.com
- *	 Source: http://github.com/brightcoveos/
+ *	 Source: http://github.com/brightcoveos
  *
  * AUTHORS:
  *	 Brian Franklin <bfranklin@brightcove.com>
